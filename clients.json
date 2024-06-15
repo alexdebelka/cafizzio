@@ -1,0 +1,82 @@
+[
+    {
+        "id": 1,
+        "code": "10",
+        "name": "edu",
+        "email": "edu@edu.ro",
+        "phone": "1234567890",
+        "credits": 163.0,
+        "history": [
+            {
+                "timestamp": "2024-06-15 21:37:06",
+                "product": "Espresso",
+                "quantity": 2,
+                "total_cost": 16.0
+            },
+            {
+                "timestamp": "2024-06-15 21:37:06",
+                "product": "Macchiato",
+                "quantity": 1,
+                "total_cost": 10.0
+            },
+            {
+                "timestamp": "2024-06-15 21:37:06",
+                "product": "Flat White",
+                "quantity": 1,
+                "total_cost": 11.0
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "code": "1",
+        "name": "alex",
+        "email": "alex@alex.com",
+        "phone": "726081999",
+        "credits": 24.0,
+        "history": [
+            {
+                "timestamp": "2024-06-15 22:39:11",
+                "product": "Espresso",
+                "quantity": 1,
+                "total_cost": 8.0
+            },
+            {
+                "timestamp": "2024-06-15 22:39:11",
+                "product": "Latte",
+                "quantity": 1,
+                "total_cost": 10.0
+            },
+            {
+                "timestamp": "2024-06-15 22:39:11",
+                "product": "Cappuccino",
+                "quantity": 1,
+                "total_cost": 12.0
+            },
+            {
+                "timestamp": "2024-06-15 22:39:11",
+                "product": "Americano",
+                "quantity": 1,
+                "total_cost": 9.0
+            },
+            {
+                "timestamp": "2024-06-15 22:39:11",
+                "product": "Macchiato",
+                "quantity": 1,
+                "total_cost": 10.0
+            },
+            {
+                "timestamp": "2024-06-15 22:39:11",
+                "product": "Affogato",
+                "quantity": 1,
+                "total_cost": 13.0
+            },
+            {
+                "timestamp": "2024-06-15 22:39:11",
+                "product": "Cold Brew",
+                "quantity": 1,
+                "total_cost": 14.0
+            }
+        ]
+    }
+]
