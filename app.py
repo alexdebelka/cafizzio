@@ -299,7 +299,7 @@ elif choice == "Purchase Products":
                     add_purchase_history(client, product_quantities)
                     clients = read_json(CLIENTS_FILE, default_clients)
                     for c in clients:
-                        if c['id'] == client['id']]:
+                        if c['id'] == client['id']:
                             c.update(client)
                     write_json(CLIENTS_FILE, clients)
                     st.success(f"Purchase successful! Total cost: {total_cost} RON. Remaining credits: {client['credits']} RON.")
