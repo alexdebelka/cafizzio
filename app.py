@@ -17,7 +17,6 @@ st.markdown("""
     .stSidebar>div {
         background-color: #F6C324;
     }
-    
     .stDataFrame>div>div>div>table {
         background-color: #F6C324;
     }
@@ -104,7 +103,7 @@ def add_client(code, name, email, phone, credits):
     write_json(CLIENTS_FILE, clients)
 
 # Update client info function
-def update_client(id, code, name, email, phone, credits):
+def update_client(id, code, name, email, phone):
     clients = read_json(CLIENTS_FILE, default_clients)
     for client in clients:
         if client['id'] == id:
@@ -112,7 +111,6 @@ def update_client(id, code, name, email, phone, credits):
             client['name'] = name.lower()
             client['email'] = email
             client['phone'] = phone
-            client['credits'] = credits
     write_json(CLIENTS_FILE, clients)
 
 # Find client by code function
@@ -301,7 +299,7 @@ elif choice == "Purchase Products":
                     add_purchase_history(client, product_quantities)
                     clients = read_json(CLIENTS_FILE, default_clients)
                     for c in clients:
-                        if c['id'] == client['id']:
+                        if c['id'] == client['id']]:
                             c.update(client)
                     write_json(CLIENTS_FILE, clients)
                     st.success(f"Purchase successful! Total cost: {total_cost} RON. Remaining credits: {client['credits']} RON.")
@@ -335,14 +333,35 @@ elif choice == "View History":
 
 elif choice == "Edit Client Info":
     st.subheader("Edit Client Info")
-    with st.form(key='edit_client_form'):
-        client_id = st.number_input("Enter Client ID", min_value=1)
-        code = st.text_input("Code")
-        name = st.text_input("Name")
-        email = st.text_input("Email")
-        phone = st.text_input("Phone")
-        credits = st.number_input("Credits (RON)", min_value=0.0)
-        submit_button = st.form_submit_button(label='Update')
-        if submit_button:
-            update_client(client_id, code, name, email, phone, credits)
-            st.success("Client info updated successfully")
+    with st.form(key='search_client_form'):
+        search_by = st.radio("Search by", ("Code", "Name"))
+        if search_by == "Code":
+            client_code = st.text_input("Enter Client Code")
+        elif search_by == "Name":
+            client_name = st.text_input("Enter Client Name")
+        search_button = st.form_submit_button(label='Search')
+        if search_button:
+            if search_by == "Code":
+                clients = find_client_by_code(client_code)
+            else:
+                clients = find_client_by_name(client_name)
+            if clients:
+                client = clients[0]
+                st.session_state['edit_client'] = client
+                st.write("Current Client Info:")
+                st.write(client)
+            else:
+                st.warning("Client not found")
+
+    if 'edit_client' in st.session_state:
+        client = st.session_state['edit_client']
+        st.subheader("Update Client Info")
+        with st.form(key='edit_client_form'):
+            code = st.text_input("Code", value=client['code'])
+            name = st.text_input("Name", value=client['name'])
+            email = st.text_input("Email", value=client['email'])
+            phone = st.text_input("Phone", value=client['phone'])
+            submit_button = st.form_submit_button(label='Update')
+            if submit_button:
+                update_client(client['id'], code, name, email, phone)
+                st.success("Client info updated successfully")
