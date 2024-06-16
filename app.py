@@ -8,26 +8,26 @@ from datetime import datetime
 st.markdown("""
     <style>
     .stButton>button {
-        background-color: #FAD02C;
+        background-color: #F6C324;
         color: black;
     }
     .stRadio>div>div>label {
-        color: #FAD02C;
+        color: #F6C324;
     }
     .stSidebar>div {
-        background-color: #FAD02C;
+        background-color: #F6C324;
     }
     .stTextInput>div>div>input {
-        color: white;
+        color: #F6C324;
     }
     .stNumberInput>div>div>input {
-        color: white;
+        color: #F6C324;
     }
     .stDataFrame>div>div>div>table {
-        background-color: #FAD02C;
+        background-color: #F6C324;
     }
     .css-1aumxhk, .css-1aumxhk a {
-        color: #FAD02C;
+        color: #F6C324;
     }
     .css-1aumxhk .css-1aumxhk, .css-1aumxhk .css-1aumxhk a {
         font-size: 1.2rem;
