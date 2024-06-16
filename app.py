@@ -17,12 +17,7 @@ st.markdown("""
     .stSidebar>div {
         background-color: #F6C324;
     }
-    .stTextInput>div>div>input {
-        color: #F6C324;
-    }
-    .stNumberInput>div>div>input {
-        color: #F6C324;
-    }
+    
     .stDataFrame>div>div>div>table {
         background-color: #F6C324;
     }
