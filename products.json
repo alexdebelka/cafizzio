@@ -39,13 +39,11 @@
         "name": "Ristretto",
         "price": 8.0
     },
-    
     {
         "id": 9,
         "name": "Cortado",
         "price": 11.0
-    }
-    
+    },
     {
         "id": 10,
         "name": "Origine",
@@ -60,7 +58,5 @@
         "id": 12,
         "name": "Lapte Vegetal",
         "price": 3.0
-    },
-   
-
+    }
 ]
