@@ -17,7 +17,12 @@ st.markdown("""
     .stSidebar>div {
         background-color: #F6C324;
     }
-    
+    .stTextInput>div>div>input {
+        color: #F6C324;
+    }
+    .stNumberInput>div>div>input {
+        color: #F6C324;
+    }
     .stDataFrame>div>div>div>table {
         background-color: #F6C324;
     }
@@ -30,11 +35,11 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# Fișierele JSON pentru stocarea datelor
+# JSON files for data storage
 CLIENTS_FILE = 'clients.json'
 PRODUCTS_FILE = 'products.json'
 
-# Date default
+# Default data
 default_clients = [
     {
         'id': 1,
@@ -66,7 +71,7 @@ default_products = [
     {'id': 16, 'name': 'Cortado', 'price': 11.0}
 ]
 
-# Funcții pentru gestionarea fișierelor JSON
+# JSON handling functions
 def read_json(file, default_data):
     if not os.path.exists(file):
         with open(file, 'w') as f:
@@ -88,7 +93,7 @@ def write_json(file, data):
     except Exception as e:
         st.error(f"Error writing to {file}: {e}")
 
-# Funcție pentru adăugarea unui client nou
+# Add new client function
 def add_client(code, name, email, phone, credits):
     clients = read_json(CLIENTS_FILE, default_clients)
     new_client = {
@@ -103,17 +108,29 @@ def add_client(code, name, email, phone, credits):
     clients.append(new_client)
     write_json(CLIENTS_FILE, clients)
 
-# Funcție pentru găsirea unui client după cod
+# Update client info function
+def update_client(id, code, name, email, phone, credits):
+    clients = read_json(CLIENTS_FILE, default_clients)
+    for client in clients:
+        if client['id'] == id:
+            client['code'] = code.lower()
+            client['name'] = name.lower()
+            client['email'] = email
+            client['phone'] = phone
+            client['credits'] = credits
+    write_json(CLIENTS_FILE, clients)
+
+# Find client by code function
 def find_client_by_code(code):
     clients = read_json(CLIENTS_FILE, default_clients)
     return [client for client in clients if client['code'] == code.lower()]
 
-# Funcție pentru găsirea unui client după nume
+# Find client by name function
 def find_client_by_name(name):
     clients = read_json(CLIENTS_FILE, default_clients)
     return [client for client in clients if client['name'] == name.lower()]
 
-# Funcție pentru actualizarea creditelor unui client
+# Update credits function
 def update_credits(client_code, amount):
     clients = read_json(CLIENTS_FILE, default_clients)
     for client in clients:
@@ -121,7 +138,7 @@ def update_credits(client_code, amount):
             client['credits'] += amount
     write_json(CLIENTS_FILE, clients)
 
-# Funcție pentru adăugarea unui produs
+# Add new product function
 def add_product(name, price):
     products = read_json(PRODUCTS_FILE, default_products)
     new_product = {
@@ -132,7 +149,7 @@ def add_product(name, price):
     products.append(new_product)
     write_json(PRODUCTS_FILE, products)
 
-# Funcție pentru actualizarea unui produs
+# Update product function
 def update_product(product_id, name, price):
     products = read_json(PRODUCTS_FILE, default_products)
     for product in products:
@@ -141,11 +158,11 @@ def update_product(product_id, name, price):
             product['price'] = price
     write_json(PRODUCTS_FILE, products)
 
-# Funcție pentru listarea produselor
+# Get products function
 def get_products():
     return read_json(PRODUCTS_FILE, default_products)
 
-# Funcție pentru adăugarea achiziției în istoricul clientului
+# Add purchase history function
 def add_purchase_history(client, products_purchased):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     for product_name, quantity in products_purchased.items():
@@ -157,16 +174,16 @@ def add_purchase_history(client, products_purchased):
                 'total_cost': quantity * next(product['price'] for product in get_products() if product['name'] == product_name)
             })
 
-# Interfața Streamlit
+# Streamlit interface
 
-# Adăugare logo pe prima pagină
-logo_path = "logo.png"  # Înlocuiește cu calea către fișierul tău de logo
+# Add logo on the first page
+logo_path = "logo.png"  # Replace with your logo file path
 if os.path.exists(logo_path):
     st.image(logo_path, width=100)
 
 st.title("CAFIZZIO")
 
-menu = ["Purchase Products", "Find Client", "View History", "Add Client", "Update Credits", "Manage Products"]
+menu = ["Purchase Products", "Find Client", "View History", "Add Client", "Update Credits", "Manage Products", "Edit Client Info"]
 choice = st.sidebar.radio("Menu", menu)
 
 if choice == "Add Client":
@@ -243,7 +260,7 @@ elif choice == "Update Credits":
     st.subheader("Update Credits")
     with st.form(key='update_credits_form'):
         client_code = st.text_input("Client Code")
-        amount = st.number_input("Amount (RON)", min_value=-100.0, max_value=100.0)
+        amount = st.number_input("Amount (RON)", min_value=-999999.0, max_value=999999.0)
         submit_button = st.form_submit_button(label='Update')
         if submit_button:
             update_credits(client_code, amount)
@@ -275,7 +292,7 @@ elif choice == "Purchase Products":
     if client:
         with st.form(key='products_form'):
             products = get_products()
-            cols = st.columns(4)  # Ajustați numărul de coloane pentru a afișa produsele pe 4 linii
+            cols = st.columns(4)  # Adjust the number of columns to display products in 4 lines
             product_quantities = {}
             for i, product in enumerate(products):
                 with cols[i % 4]:
@@ -289,7 +306,7 @@ elif choice == "Purchase Products":
                     add_purchase_history(client, product_quantities)
                     clients = read_json(CLIENTS_FILE, default_clients)
                     for c in clients:
-                        if c['id'] == client['id']:
+                        if c['id'] == client['id']]:
                             c.update(client)
                     write_json(CLIENTS_FILE, clients)
                     st.success(f"Purchase successful! Total cost: {total_cost} RON. Remaining credits: {client['credits']} RON.")
@@ -320,3 +337,17 @@ elif choice == "View History":
                     st.write(f"No purchase history for {client['name'].capitalize()}.")
             else:
                 st.warning("Client not found")
+
+elif choice == "Edit Client Info":
+    st.subheader("Edit Client Info")
+    with st.form(key='edit_client_form'):
+        client_id = st.number_input("Enter Client ID", min_value=1)
+        code = st.text_input("Code")
+        name = st.text_input("Name")
+        email = st.text_input("Email")
+        phone = st.text_input("Phone")
+        credits = st.number_input("Credits (RON)", min_value=0.0)
+        submit_button = st.form_submit_button(label='Update')
+        if submit_button:
+            update_client(client_id, code, name, email, phone, credits)
+            st.success("Client info updated successfully")
