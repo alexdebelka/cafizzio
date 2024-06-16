@@ -33,35 +33,18 @@ st.markdown("""
 CLIENTS_FILE = 'clients.json'
 PRODUCTS_FILE = 'products.json'
 
-# Default data
-default_clients = [
-    {
-        'id': 1,
-        'code': '10',
-        'name': 'edu',
-        'email': 'edu@edu.ro',
-        'phone': '1234567890',
-        'credits': 100.0,
-        'history': []
-    }
-]
-
-
-
 # JSON handling functions
-def read_json(file, default_data):
+def read_json(file):
     if not os.path.exists(file):
-        with open(file, 'w') as f:
-            json.dump(default_data, f)
+        st.error(f"The file {file} does not exist.")
+        return []
     with open(file, 'r') as f:
         try:
             data = json.load(f)
-            if not data:
-                data = default_data
-                write_json(file, data)
             return data
         except json.JSONDecodeError:
-            return default_data
+            st.error(f"Error reading {file}. It may be malformed.")
+            return []
 
 def write_json(file, data):
     try:
@@ -72,7 +55,7 @@ def write_json(file, data):
 
 # Add new client function
 def add_client(code, name, email, phone, credits):
-    clients = read_json(CLIENTS_FILE, default_clients)
+    clients = read_json(CLIENTS_FILE)
     new_client = {
         'id': len(clients) + 1,
         'code': code.lower(),
@@ -87,7 +70,7 @@ def add_client(code, name, email, phone, credits):
 
 # Update client info function
 def update_client(id, code, name, email, phone):
-    clients = read_json(CLIENTS_FILE, default_clients)
+    clients = read_json(CLIENTS_FILE)
     for client in clients:
         if client['id'] == id:
             client['code'] = code.lower()
@@ -98,17 +81,17 @@ def update_client(id, code, name, email, phone):
 
 # Find client by code function
 def find_client_by_code(code):
-    clients = read_json(CLIENTS_FILE, default_clients)
+    clients = read_json(CLIENTS_FILE)
     return [client for client in clients if client['code'] == code.lower()]
 
 # Find client by name function
 def find_client_by_name(name):
-    clients = read_json(CLIENTS_FILE, default_clients)
+    clients = read_json(CLIENTS_FILE)
     return [client for client in clients if client['name'] == name.lower()]
 
 # Update credits function
 def update_credits(client_code, amount):
-    clients = read_json(CLIENTS_FILE, default_clients)
+    clients = read_json(CLIENTS_FILE)
     for client in clients:
         if client['code'] == client_code.lower():
             client['credits'] += amount
@@ -116,7 +99,7 @@ def update_credits(client_code, amount):
 
 # Add new product function
 def add_product(name, price):
-    products = read_json(PRODUCTS_FILE, default_products)
+    products = read_json(PRODUCTS_FILE)
     new_product = {
         'id': len(products) + 1,
         'name': name,
@@ -127,7 +110,7 @@ def add_product(name, price):
 
 # Update product function
 def update_product(product_id, name, price):
-    products = read_json(PRODUCTS_FILE, default_products)
+    products = read_json(PRODUCTS_FILE)
     for product in products:
         if product['id'] == product_id:
             product['name'] = name
@@ -136,7 +119,7 @@ def update_product(product_id, name, price):
 
 # Get products function
 def get_products():
-    return read_json(PRODUCTS_FILE, default_products)
+    return read_json(PRODUCTS_FILE)
 
 # Add purchase history function
 def add_purchase_history(client, products_purchased):
@@ -197,7 +180,7 @@ elif choice == "Find Client":
             else:
                 st.warning("Client not found")
     st.subheader("All Clients")
-    clients = read_json(CLIENTS_FILE, default_clients)
+    clients = read_json(CLIENTS_FILE)
     df = pd.DataFrame(clients).drop(columns=['history'])
     df.rename(columns={'credits': 'credits (RON)'}, inplace=True)
     st.dataframe(df)
@@ -280,7 +263,7 @@ elif choice == "Purchase Products":
                 if client['credits'] >= total_cost:
                     client['credits'] -= total_cost
                     add_purchase_history(client, product_quantities)
-                    clients = read_json(CLIENTS_FILE, default_clients)
+                    clients = read_json(CLIENTS_FILE)
                     for c in clients:
                         if c['id'] == client['id']:
                             c.update(client)
